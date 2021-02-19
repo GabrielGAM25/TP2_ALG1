@@ -69,7 +69,7 @@ int main() {
     Point firstPoint = currentPath.getFirstPoint();
     Point secondPoint = currentPath.getSecondPoint();
     
-    cout << firstPoint.getId() << " - " << secondPoint.getId() << " " << currentPath.getCost() << endl;
+    cout << firstPoint.getId() << " " << secondPoint.getId() << " " << currentPath.getCost() << endl;
   }
 
   return 0;
