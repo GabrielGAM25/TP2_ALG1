@@ -3,20 +3,28 @@
 
 #include<vector>
 
-using namespace std;
+#include "BicyclePath.h"
 
-// TODO: add a class for this pair
-typedef  pair<int, int> iPair;
+using namespace std;
 
 class Graph {
 private:
   int pointsCount;
-  vector< pair<int, iPair> > edges;
+  vector< Point > touristicPoints;
+  vector< BicyclePath > bicyclePaths;
+  vector< BicyclePath > minSpanningTree;
+  vector< int > touristicPointsPaths;
+  int mstCost;
+  int mstAttractiveness;
 
 public:
-  Graph(int pointsCount);
-  void addEdge(int u, int v, int w);
-  int kruskalMST();
+  Graph(vector< Point > touristicPoints);
+  void addBicyclePath(Point firstPoint, Point secondPoint, int cost);
+  void calculateMinSpanningTree();
+  vector< BicyclePath > getMinSpanningTree();
+  vector< int > getTouristicPointsPaths();
+  int getMstCost();
+  int getMstAttractiveness();
 };
 
 #endif

@@ -18,15 +18,13 @@ void DisjointSets::merge(int firstPoint, int secondPoint) {
   int firstPointParent = find(firstPoint);
   int secondPointParent = find(secondPoint);
 
-  if (ranks[secondPointParent] < ranks[firstPointParent]) {
+  if (ranks[firstPointParent] > ranks[secondPointParent]) {
     parents[secondPointParent] = firstPointParent;
-    return;
-  }
-  
-  if(ranks[firstPointParent] < ranks[secondPointParent]){
+  } else {
     parents[firstPointParent] = secondPointParent;
-    return;
-  } 
+  }
 
-  ranks[secondPointParent]++;
+  if (ranks[firstPointParent] == ranks[secondPointParent]) {
+    ranks[secondPointParent]++;
+  }
 }

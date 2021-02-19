@@ -4,37 +4,75 @@
 #include "../include/Graph.h"
 #include "../include/DisjointSets.h"
 
-Graph::Graph(int pointsCount) {
-  this->pointsCount = pointsCount;
+Graph::Graph(vector< Point > touristicPoints) {
+  this->pointsCount = touristicPoints.size();
+  this->touristicPoints = touristicPoints;
+  touristicPointsPaths = vector<int>(pointsCount);
+  mstCost = 0;
+  mstAttractiveness = 0;
 }
 
-void Graph::addEdge(int firstPoint, int secondPoint, int cost){
-  edges.push_back({ cost, {firstPoint, secondPoint} });
+void Graph::addBicyclePath(Point firstPoint, Point secondPoint, int cost) {
+  BicyclePath newBicyclePath = BicyclePath(firstPoint, secondPoint, cost);
+  bicyclePaths.push_back(newBicyclePath);
 }
 
-int Graph::kruskalMST(){
-  int mst_wt = 0;
+struct {
+  bool operator()(BicyclePath firstBicyclePath, BicyclePath secondBicyclePath) const {
+    int firstPathCost = firstBicyclePath.getCost();
+    int secondPathCost = secondBicyclePath.getCost();
+    bool isFirstCostMinor = firstPathCost < secondPathCost;
+    bool areCostsEqual = firstPathCost == secondPathCost;
 
-  sort(edges.begin(), edges.end());
+    int secondPathAttractiveness = secondBicyclePath.getAttractiviteness();
+    int firstPathAttractiveness = firstBicyclePath.getAttractiviteness();
+    bool isFirstAttractivenessGreater = firstPathAttractiveness > secondPathAttractiveness;
 
-  DisjointSets ds = DisjointSets(pointsCount);
+    return isFirstCostMinor || (areCostsEqual && isFirstAttractivenessGreater);
+  }
+} pathsSorter;
 
-  vector< pair<int, iPair> >::iterator it;
-  for (it = edges.begin(); it != edges.end(); it++)
+void Graph::calculateMinSpanningTree() {
+  sort(bicyclePaths.begin(), bicyclePaths.end(), pathsSorter);
+
+  DisjointSets disjointSets = DisjointSets(pointsCount);
+
+  vector< BicyclePath >::iterator currentPath;
+  for (currentPath = bicyclePaths.begin(); currentPath != bicyclePaths.end(); currentPath++)
   {
-    int firstPoint = it->second.first;
-    int secondPoint = it->second.second;
+    Point firstPoint = currentPath->getFirstPoint();
+    Point secondPoint = currentPath->getSecondPoint();
 
-    int firstPointSet = ds.find(firstPoint);
-    int secondPointSet = ds.find(secondPoint);
+    int firstPointSet = disjointSets.find(firstPoint.getId());
+    int secondPointSet = disjointSets.find(secondPoint.getId());
 
     if (firstPointSet != secondPointSet)
     {
-      cout << firstPoint << " - " << secondPoint << endl;
-      mst_wt += it->first;
-      ds.merge(firstPointSet, secondPointSet);
+      minSpanningTree.push_back(*currentPath);
+      
+      mstCost += currentPath->getCost();
+      mstAttractiveness += currentPath->getAttractiviteness();
+      
+      touristicPointsPaths.at(firstPoint.getId())++;
+      touristicPointsPaths.at(secondPoint.getId())++;
+
+      disjointSets.merge(firstPointSet, secondPointSet);
     }
   }
+}
 
-  return mst_wt;
+vector< BicyclePath > Graph::getMinSpanningTree() {
+  return minSpanningTree;
+}
+
+vector< int > Graph::getTouristicPointsPaths() {
+  return touristicPointsPaths;
+}
+
+int Graph::getMstCost() {
+  return mstCost;
+}
+
+int Graph::getMstAttractiveness() {
+  return mstAttractiveness;
 }

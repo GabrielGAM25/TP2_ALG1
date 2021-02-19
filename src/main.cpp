@@ -4,28 +4,73 @@
 using namespace std;
 
 int main() {
-    Graph g = Graph(9); 
+  int pointsCount;
+  int routesCount;
+
+  cin >> pointsCount >> routesCount;
+
+  vector <Point> touristicPoints;
+
+  for(int i = 0; i < pointsCount; i++) {
+    int touristicValue;
+    
+    cin >> touristicValue;
+
+    touristicPoints.push_back(Point(i, touristicValue));
+  }
+
+  Graph graph = Graph(touristicPoints);
+
+  for (int i = 0; i < routesCount; i++) {
+    int firstPoint;
+    int secondPoint;
+    int cost;
+
+    cin >> firstPoint >> secondPoint >> cost;
+
+    graph.addBicyclePath(touristicPoints[firstPoint], touristicPoints[secondPoint], cost);
+  }
+
+  //  making above shown graph 
+  // 0 1 4
+  // 0 7 8
+  // 1 2 8
+  // 1 7 11
+  // 2 3 7
+  // 2 8 2
+  // 2 5 4
+  // 3 4 9
+  // 3 5 14
+  // 4 5 10
+  // 5 6 2
+  // 6 7 1
+  // 6 8 6
+  // 7 8 7
+
+  graph.calculateMinSpanningTree();
+
+  int mstCost = graph.getMstCost();
+  int mstAttractiveness = graph.getMstAttractiveness();
+
+  cout << mstCost << " " << mstAttractiveness << endl;
+
+  vector<int> touristicPointsPaths = graph.getTouristicPointsPaths();
+
+  cout << touristicPointsPaths.at(0);
+  for(int i = 1; i < pointsCount; i++) {
+    cout << " " << touristicPointsPaths.at(i);
+  }
+
+  cout << endl;
   
-    //  making above shown graph 
-    g.addEdge(0, 1, 4); 
-    g.addEdge(0, 7, 8); 
-    g.addEdge(1, 2, 8); 
-    g.addEdge(1, 7, 11); 
-    g.addEdge(2, 3, 7); 
-    g.addEdge(2, 8, 2); 
-    g.addEdge(2, 5, 4); 
-    g.addEdge(3, 4, 9); 
-    g.addEdge(3, 5, 14); 
-    g.addEdge(4, 5, 10); 
-    g.addEdge(5, 6, 2); 
-    g.addEdge(6, 7, 1); 
-    g.addEdge(6, 8, 6); 
-    g.addEdge(7, 8, 7); 
-  
-    cout << "Edges of MST are \n"; 
-    int mst_wt = g.kruskalMST(); 
-  
-    cout << "\nWeight of MST is " << mst_wt; 
-  
-    return 0; 
-} 
+  vector<BicyclePath> minSpanningTree = graph.getMinSpanningTree();
+
+  for(auto& currentPath : minSpanningTree) {
+    Point firstPoint = currentPath.getFirstPoint();
+    Point secondPoint = currentPath.getSecondPoint();
+    
+    cout << firstPoint.getId() << " - " << secondPoint.getId() << " " << currentPath.getCost() << endl;
+  }
+
+  return 0;
+}
