@@ -8,15 +8,15 @@ DisjointSets::DisjointSets(int pointsCount) {
   }
 }
 
-int DisjointSets::find(int point) {
+int DisjointSets::findSet(int point) {
   if (point != parents.at(point))
-    parents.at(point) = find(parents.at(point));
+    parents.at(point) = findSet(parents.at(point));
   return parents.at(point);
 }
 
-void DisjointSets::merge(int firstPoint, int secondPoint) {
-  int firstPointParent = find(firstPoint);
-  int secondPointParent = find(secondPoint);
+void DisjointSets::mergeSets(int firstPoint, int secondPoint) {
+  int firstPointParent = findSet(firstPoint);
+  int secondPointParent = findSet(secondPoint);
 
   if (ranks[firstPointParent] > ranks[secondPointParent]) {
     parents[secondPointParent] = firstPointParent;

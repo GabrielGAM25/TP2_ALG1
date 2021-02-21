@@ -43,8 +43,8 @@ void Graph::calculateMinSpanningTree() {
     Point firstPoint = currentPath->getFirstPoint();
     Point secondPoint = currentPath->getSecondPoint();
 
-    int firstPointSet = disjointSets.find(firstPoint.getId());
-    int secondPointSet = disjointSets.find(secondPoint.getId());
+    int firstPointSet = disjointSets.findSet(firstPoint.getId());
+    int secondPointSet = disjointSets.findSet(secondPoint.getId());
 
     if (firstPointSet != secondPointSet)
     {
@@ -56,7 +56,7 @@ void Graph::calculateMinSpanningTree() {
       touristicPointsPaths.at(firstPoint.getId())++;
       touristicPointsPaths.at(secondPoint.getId())++;
 
-      disjointSets.merge(firstPointSet, secondPointSet);
+      disjointSets.mergeSets(firstPointSet, secondPointSet);
     }
   }
 }

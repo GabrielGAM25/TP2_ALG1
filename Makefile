@@ -5,6 +5,7 @@ INCLUDE_FOLDER = ./include/
 BIN_FOLDER = ./
 OBJ_FOLDER = ./obj/
 SRC_FOLDER = ./src/
+TMPOUT = .testresult
 
 MAIN = Main
 TARGET = tp02
@@ -16,6 +17,9 @@ $(OBJ_FOLDER)%.o: $(SRC_FOLDER)%.cpp
 
 all: $(OBJ)
 	$(CC) $(CXXFLAGS) -o $(BIN_FOLDER)$(TARGET) $(OBJ)
+
+test: $(TARGET)
+	@bash run_tests.sh $(BIN_FOLDER)$(TARGET) $(TMPOUT)
 
 clean:
 	@rm -rf $(OBJ_FOLDER)* $(BIN_FOLDER)$(TARGET)

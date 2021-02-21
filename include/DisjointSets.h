@@ -13,8 +13,8 @@ private:
 
 public:
   DisjointSets(int n);
-  int find(int u);
-  void merge(int x, int y);
+  int findSet(int u);
+  void mergeSets(int x, int y);
 };
 
 #endif
