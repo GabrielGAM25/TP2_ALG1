@@ -13,6 +13,7 @@ SRC = $(wildcard $(SRC_FOLDER)*.cpp)
 OBJ = $(patsubst $(SRC_FOLDER)%.cpp, $(OBJ_FOLDER)%.o, $(SRC))
 
 $(OBJ_FOLDER)%.o: $(SRC_FOLDER)%.cpp
+	@mkdir -p $(OBJ_FOLDER)
 	$(CC) $(CXXFLAGS) -c $< -o $@ -I$(INCLUDE_FOLDER)
 
 all: $(OBJ)
@@ -22,4 +23,4 @@ test: $(TARGET)
 	@bash run_tests.sh $(BIN_FOLDER)$(TARGET) $(TMPOUT)
 
 clean:
-	@rm -rf $(OBJ_FOLDER)* $(BIN_FOLDER)$(TARGET)
+	@rm -rf $(OBJ_FOLDER) $(BIN_FOLDER)$(TARGET)
